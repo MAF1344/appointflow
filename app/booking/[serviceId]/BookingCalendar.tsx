@@ -111,7 +111,13 @@ export default function BookingCalendar({service, staffList}: {service: Service;
         <label className="text-sm font-medium mb-2 block">Pilih Staff</label>
         <Select value={selectedStaffId} onValueChange={setSelectedStaffId}>
           <SelectTrigger className="w-full">
-            <SelectValue />
+            <SelectValue>
+              {(value: string | null) => {
+                if (!value || value === 'any') return 'Siapa saja yang tersedia';
+                const staff = staffList.find((s) => s.id === value);
+                return staff?.name ?? value;
+              }}
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="any">Siapa saja yang tersedia</SelectItem>
