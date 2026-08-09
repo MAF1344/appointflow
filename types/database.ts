@@ -13,3 +13,18 @@ export type BookingWithRelations = {
   services: {title: string} | null;
   staff: {name: string} | null;
 };
+
+export type Staff = {
+  id: string;
+  name: string;
+  avatar_url: string | null;
+  is_active: boolean;
+};
+
+export type Availability = {
+  id: string;
+  staff_id: string;
+  day_of_week: number;
+  start_time: string;
+  end_time: string;
+};
