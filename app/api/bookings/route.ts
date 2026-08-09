@@ -3,6 +3,10 @@ import {NextRequest, NextResponse} from 'next/server';
 import {bookingFormSchema} from '@/lib/validations/booking';
 import {z} from 'zod';
 import {createAdminClient} from '../../../lib/supabase/admin';
+import {Resend} from 'resend';
+import {BookingConfirmationEmail} from '@/lib/email/booking-confirmation';
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // Skema lengkap untuk request body (form data + info booking)
 const createBookingSchema = bookingFormSchema.extend({
@@ -107,14 +111,37 @@ export async function POST(request: NextRequest) {
     .single();
 
   if (insertError) {
-    console.error('Insert booking error:', insertError)
+    console.error('Insert booking error:', insertError);
     if (insertError.code === '23505') {
-      return NextResponse.json(
-        { error: 'Maaf, slot ini baru saja terisi. Silakan pilih jam lain.' },
-        { status: 409 }
-      )
+      return NextResponse.json({error: 'Maaf, slot ini baru saja terisi. Silakan pilih jam lain.'}, {status: 409});
     }
-    return NextResponse.json({ error: 'Gagal menyimpan booking' }, { status: 500 })
+    return NextResponse.json({error: 'Gagal menyimpan booking'}, {status: 500});
+  }
+
+  // 5. Ambil data lengkap untuk email (nama layanan & staff)
+  const {data: serviceDetail} = await supabase.from('services').select('title, price').eq('id', service_id).single();
+
+  const {data: staffDetail} = await supabase.from('staff').select('name').eq('id', assignedStaffId).single();
+
+  // 6. Kirim email konfirmasi (jangan sampai gagal kirim email membatalkan booking yang sudah tersimpan)
+  try {
+    await resend.emails.send({
+      from: 'AppointFlow <onboarding@resend.dev>',
+      to: customerData.customer_email,
+      subject: 'Booking Kamu Sudah Dikonfirmasi',
+      react: BookingConfirmationEmail({
+        customerName: customerData.customer_name,
+        serviceName: serviceDetail?.title ?? '-',
+        staffName: staffDetail?.name ?? '-',
+        bookingDate: booking_date,
+        startTime: start_time,
+        endTime: end_time,
+        price: serviceDetail?.price ?? 0,
+      }),
+    });
+  } catch (emailError) {
+    console.error('Failed to send confirmation email:', emailError);
+    // Sengaja tidak return error — booking tetap dianggap berhasil walau email gagal
   }
 
   return NextResponse.json({booking}, {status: 201});
