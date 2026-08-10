@@ -1,6 +1,25 @@
-@import "tailwindcss";
-@import "tw-animate-css";
-@import "shadcn/tailwind.css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
+@import 'shadcn/tailwind.css';
+
+@theme {
+  --color-ink: #1c2321;
+  --color-parchment: #ede6d6;
+  --color-brass: #b08d57;
+  --color-brass-light: #d4b483;
+  --color-barber-red: #7a2e2e;
+  --color-sage: #4a5d4e;
+  --color-bone: #f7f4ec;
+
+  --font-display: var(--font-display), serif;
+  --font-sans: var(--font-body), sans-serif;
+  --font-mono: var(--font-mono), monospace;
+}
+
+body {
+  background-color: var(--color-parchment);
+  color: var(--color-ink);
+}
 
 @custom-variant dark (&:is(.dark *));
 
