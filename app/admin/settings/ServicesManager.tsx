@@ -89,38 +89,38 @@ export default function ServicesManager({initialServices}: {initialServices: Ser
   }
 
   return (
-    <div className="mt-4">
+    <div className="mt-6">
       <div className="flex justify-end mb-4">
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-          <DialogTrigger asChild>
-            <Button onClick={openAddDialog}>+ Tambah Layanan</Button>
+          <DialogTrigger onClick={openAddDialog} className="bg-brass hover:bg-brass/90 text-ink rounded-sm px-4 py-2 text-sm font-medium inline-flex items-center justify-center transition-colors">
+            + Tambah Layanan
           </DialogTrigger>
-          <DialogContent>
+          <DialogContent className="bg-parchment border-ink/10">
             <DialogHeader>
-              <DialogTitle>{editingService ? 'Edit Layanan' : 'Tambah Layanan'}</DialogTitle>
+              <DialogTitle className="font-display text-xl text-ink">{editingService ? 'Edit Layanan' : 'Tambah Layanan'}</DialogTitle>
             </DialogHeader>
 
             <div className="space-y-4">
               <div>
-                <label className="text-sm font-medium mb-1 block">Nama Layanan</label>
-                <Input value={title} onChange={(e) => setTitle(e.target.value)} />
+                <label className="font-mono text-xs uppercase tracking-wide text-ink/50 mb-1.5 block">Nama Layanan</label>
+                <Input value={title} onChange={(e) => setTitle(e.target.value)} className="border-ink/20 rounded-sm bg-bone" />
               </div>
               <div>
-                <label className="text-sm font-medium mb-1 block">Deskripsi</label>
-                <Textarea value={description} onChange={(e) => setDescription(e.target.value)} />
+                <label className="font-mono text-xs uppercase tracking-wide text-ink/50 mb-1.5 block">Deskripsi</label>
+                <Textarea value={description} onChange={(e) => setDescription(e.target.value)} className="border-ink/20 rounded-sm bg-bone" />
               </div>
               <div className="grid grid-cols-2 gap-3">
                 <div>
-                  <label className="text-sm font-medium mb-1 block">Durasi (menit)</label>
-                  <Input type="number" value={duration} onChange={(e) => setDuration(e.target.value)} />
+                  <label className="font-mono text-xs uppercase tracking-wide text-ink/50 mb-1.5 block">Durasi (menit)</label>
+                  <Input type="number" value={duration} onChange={(e) => setDuration(e.target.value)} className="border-ink/20 rounded-sm bg-bone" />
                 </div>
                 <div>
-                  <label className="text-sm font-medium mb-1 block">Harga (Rp)</label>
-                  <Input type="number" value={price} onChange={(e) => setPrice(e.target.value)} />
+                  <label className="font-mono text-xs uppercase tracking-wide text-ink/50 mb-1.5 block">Harga (Rp)</label>
+                  <Input type="number" value={price} onChange={(e) => setPrice(e.target.value)} className="border-ink/20 rounded-sm bg-bone" />
                 </div>
               </div>
 
-              <Button onClick={handleSubmit} disabled={submitting} className="w-full">
+              <Button onClick={handleSubmit} disabled={submitting} className="w-full bg-ink hover:bg-ink/90 text-bone rounded-sm">
                 {submitting ? 'Menyimpan...' : 'Simpan'}
               </Button>
             </div>
@@ -129,17 +129,20 @@ export default function ServicesManager({initialServices}: {initialServices: Ser
       </div>
 
       <div className="space-y-2">
-        {services.map((service) => (
-          <div key={service.id} className="flex items-center justify-between border rounded-lg p-4">
-            <div>
-              <p className="font-medium">{service.title}</p>
-              <p className="text-sm text-gray-500">
-                {service.duration_minutes} menit — Rp {service.price.toLocaleString('id-ID')}
-              </p>
+        {services.map((service, idx) => (
+          <div key={service.id} className="flex items-center justify-between border border-ink/10 bg-bone rounded-sm p-4">
+            <div className="flex items-center gap-4">
+              <span className="font-mono text-xs text-brass">{String(idx + 1).padStart(2, '0')}</span>
+              <div>
+                <p className="font-medium text-ink">{service.title}</p>
+                <p className="font-mono text-xs text-ink/50">
+                  {service.duration_minutes} menit — Rp {service.price.toLocaleString('id-ID')}
+                </p>
+              </div>
             </div>
             <div className="flex items-center gap-3">
               <Switch checked={service.is_active} onCheckedChange={() => toggleActive(service)} />
-              <Button variant="outline" size="sm" onClick={() => openEditDialog(service)}>
+              <Button variant="outline" size="sm" onClick={() => openEditDialog(service)} className="border-ink/20 text-ink hover:bg-ink hover:text-bone rounded-sm">
                 Edit
               </Button>
             </div>

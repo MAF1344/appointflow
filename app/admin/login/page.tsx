@@ -31,7 +31,6 @@ export default function AdminLoginPage() {
       return;
     }
 
-    // Cek role setelah berhasil login
     const {data: profile} = await supabase.from('profiles').select('role').eq('id', data.user.id).single();
 
     if (profile?.role !== 'ADMIN') {
@@ -46,26 +45,37 @@ export default function AdminLoginPage() {
   }
 
   return (
-    <main className="max-w-sm mx-auto mt-20 p-6 border rounded-lg">
-      <h1 className="text-xl font-bold mb-6">Admin Login</h1>
+    <main className="min-h-screen bg-ink flex items-center justify-center px-6">
+      <div className="w-full max-w-sm">
+        {/* Barber pole stripe di atas card */}
+        <div
+          className="h-1.5 mb-8 rounded-full"
+          style={{
+            backgroundImage: 'repeating-linear-gradient(135deg, var(--color-barber-red) 0 10px, var(--color-bone) 10px 20px, var(--color-brass) 20px 30px)',
+          }}
+        />
 
-      <form onSubmit={handleLogin} className="space-y-4">
-        <div>
-          <label className="text-sm font-medium mb-1 block">Email</label>
-          <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        </div>
+        <p className="font-mono text-xs tracking-[0.3em] uppercase text-brass text-center mb-2">Area Terbatas</p>
+        <h1 className="font-display text-3xl font-bold text-bone text-center mb-8">Admin Login</h1>
 
-        <div>
-          <label className="text-sm font-medium mb-1 block">Password</label>
-          <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required />
-        </div>
+        <form onSubmit={handleLogin} className="space-y-4">
+          <div>
+            <label className="font-mono text-xs uppercase tracking-wide text-bone/60 mb-1.5 block">Email</label>
+            <Input type="email" value={email} onChange={(e) => setEmail(e.target.value)} required className="bg-bone/5 border-bone/20 text-bone rounded-sm placeholder:text-bone/30" />
+          </div>
 
-        {error && <p className="text-sm text-red-500">{error}</p>}
+          <div>
+            <label className="font-mono text-xs uppercase tracking-wide text-bone/60 mb-1.5 block">Password</label>
+            <Input type="password" value={password} onChange={(e) => setPassword(e.target.value)} required className="bg-bone/5 border-bone/20 text-bone rounded-sm placeholder:text-bone/30" />
+          </div>
 
-        <Button type="submit" className="w-full" disabled={loading}>
-          {loading ? 'Memproses...' : 'Login'}
-        </Button>
-      </form>
+          {error && <p className="text-sm text-barber-red">{error}</p>}
+
+          <Button type="submit" disabled={loading} className="w-full bg-brass hover:bg-brass/90 text-ink rounded-sm mt-2">
+            {loading ? 'Memproses...' : 'Masuk'}
+          </Button>
+        </form>
+      </div>
     </main>
   );
 }

@@ -2,7 +2,6 @@
 
 import {useState} from 'react';
 import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow} from '@/components/ui/table';
-import {Badge} from '@/components/ui/badge';
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from '@/components/ui/select';
 import {BookingWithRelations, BookingStatus} from '@/types/database';
 import {format, parseISO} from 'date-fns';
@@ -10,11 +9,11 @@ import {id as localeId} from 'date-fns/locale';
 
 const statusOptions: BookingStatus[] = ['PENDING', 'APPROVED', 'COMPLETED', 'CANCELLED'];
 
-const statusColors: Record<BookingStatus, string> = {
-  PENDING: 'bg-yellow-100 text-yellow-700',
-  APPROVED: 'bg-blue-100 text-blue-700',
-  COMPLETED: 'bg-green-100 text-green-700',
-  CANCELLED: 'bg-red-100 text-red-700',
+const statusStyles: Record<BookingStatus, string> = {
+  PENDING: 'bg-brass/15 text-brass border-brass/30',
+  APPROVED: 'bg-sage/15 text-sage border-sage/30',
+  COMPLETED: 'bg-ink/10 text-ink border-ink/20',
+  CANCELLED: 'bg-barber-red/10 text-barber-red border-barber-red/30',
 };
 
 export default function BookingTable({initialBookings}: {initialBookings: BookingWithRelations[]}) {
@@ -44,11 +43,10 @@ export default function BookingTable({initialBookings}: {initialBookings: Bookin
 
   return (
     <div>
-      {/* Filter Status */}
-      <div className="mb-4 flex items-center gap-2">
-        <span className="text-sm font-medium">Filter Status:</span>
+      <div className="mb-4 flex items-center gap-3">
+        <span className="font-mono text-xs uppercase tracking-wide text-ink/50">Filter</span>
         <Select value={filterStatus} onValueChange={setFilterStatus}>
-          <SelectTrigger className="w-48">
+          <SelectTrigger className="w-48 border-ink/20 rounded-sm">
             <SelectValue>{(value: string) => (value === 'ALL' ? 'Semua Status' : value)}</SelectValue>
           </SelectTrigger>
           <SelectContent>
@@ -60,53 +58,52 @@ export default function BookingTable({initialBookings}: {initialBookings: Bookin
             ))}
           </SelectContent>
         </Select>
-        <span className="text-sm text-gray-400 ml-2">{filteredBookings.length} booking</span>
+        <span className="font-mono text-xs text-ink/40">{filteredBookings.length} booking</span>
       </div>
 
-      {/* Tabel */}
-      <div className="border rounded-lg overflow-hidden">
+      <div className="border border-ink/10 rounded-sm overflow-hidden bg-bone">
         <Table>
           <TableHeader>
-            <TableRow>
-              <TableHead>Customer</TableHead>
-              <TableHead>Layanan</TableHead>
-              <TableHead>Staff</TableHead>
-              <TableHead>Tanggal</TableHead>
-              <TableHead>Jam</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Ubah Status</TableHead>
+            <TableRow className="border-ink/10 hover:bg-transparent">
+              <TableHead className="font-mono text-xs uppercase tracking-wide text-ink/50">Customer</TableHead>
+              <TableHead className="font-mono text-xs uppercase tracking-wide text-ink/50">Layanan</TableHead>
+              <TableHead className="font-mono text-xs uppercase tracking-wide text-ink/50">Staff</TableHead>
+              <TableHead className="font-mono text-xs uppercase tracking-wide text-ink/50">Tanggal</TableHead>
+              <TableHead className="font-mono text-xs uppercase tracking-wide text-ink/50">Jam</TableHead>
+              <TableHead className="font-mono text-xs uppercase tracking-wide text-ink/50">Status</TableHead>
+              <TableHead className="font-mono text-xs uppercase tracking-wide text-ink/50">Ubah</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {filteredBookings.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={7} className="text-center text-gray-400 py-8">
+                <TableCell colSpan={7} className="text-center text-ink/40 py-10">
                   Tidak ada booking dengan status ini.
                 </TableCell>
               </TableRow>
             ) : (
               filteredBookings.map((booking) => (
-                <TableRow key={booking.id}>
+                <TableRow key={booking.id} className="border-ink/10">
                   <TableCell>
-                    <div className="font-medium">{booking.customer_name}</div>
-                    <div className="text-xs text-gray-400">{booking.customer_email}</div>
+                    <div className="font-medium text-ink">{booking.customer_name}</div>
+                    <div className="text-xs text-ink/40">{booking.customer_email}</div>
                   </TableCell>
-                  <TableCell>{booking.services?.title ?? '-'}</TableCell>
-                  <TableCell>{booking.staff?.name ?? '-'}</TableCell>
-                  <TableCell>
+                  <TableCell className="text-ink/80">{booking.services?.title ?? '-'}</TableCell>
+                  <TableCell className="text-ink/80">{booking.staff?.name ?? '-'}</TableCell>
+                  <TableCell className="font-mono text-sm text-ink/80">
                     {format(parseISO(booking.booking_date), 'd MMM yyyy', {
                       locale: localeId,
                     })}
                   </TableCell>
-                  <TableCell>
+                  <TableCell className="font-mono text-sm text-ink/80">
                     {booking.start_time.slice(0, 5)} - {booking.end_time.slice(0, 5)}
                   </TableCell>
                   <TableCell>
-                    <Badge className={statusColors[booking.status]}>{booking.status}</Badge>
+                    <span className={`inline-block px-2.5 py-1 text-xs font-mono uppercase tracking-wide border rounded-sm ${statusStyles[booking.status]}`}>{booking.status}</span>
                   </TableCell>
                   <TableCell>
                     <Select value={booking.status} onValueChange={(value) => handleStatusChange(booking.id, value as BookingStatus)} disabled={updatingId === booking.id}>
-                      <SelectTrigger className="w-40">
+                      <SelectTrigger className="w-40 border-ink/20 rounded-sm">
                         <SelectValue>{(value: string) => value}</SelectValue>
                       </SelectTrigger>
                       <SelectContent>

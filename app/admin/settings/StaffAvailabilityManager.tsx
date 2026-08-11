@@ -94,11 +94,11 @@ export default function StaffAvailabilityManager({staffList, initialAvailability
   }
 
   return (
-    <div className="mt-4 space-y-6">
+    <div className="mt-6 space-y-6">
       <div>
-        <label className="text-sm font-medium mb-2 block">Pilih Staff</label>
+        <label className="font-mono text-xs uppercase tracking-wide text-ink/50 mb-2 block">Pilih Staff</label>
         <Select value={selectedStaffId} onValueChange={setSelectedStaffId}>
-          <SelectTrigger className="w-64">
+          <SelectTrigger className="w-64 border-ink/20 rounded-sm bg-bone">
             <SelectValue>{(value: string) => staffList.find((s) => s.id === value)?.name ?? 'Pilih staff'}</SelectValue>
           </SelectTrigger>
           <SelectContent>
@@ -111,7 +111,7 @@ export default function StaffAvailabilityManager({staffList, initialAvailability
         </Select>
       </div>
 
-      <div className="space-y-3">
+      <div className="space-y-2">
         {DAYS.map((day) => {
           const daySchedule = currentSchedule[day.value] || {
             enabled: false,
@@ -120,25 +120,25 @@ export default function StaffAvailabilityManager({staffList, initialAvailability
           };
 
           return (
-            <div key={day.value} className="flex items-center gap-4 border rounded-lg p-3">
+            <div key={day.value} className="flex items-center gap-4 border border-ink/10 bg-bone rounded-sm p-3">
               <Switch checked={daySchedule.enabled} onCheckedChange={(checked) => updateDay(day.value, {enabled: checked})} />
-              <span className="w-20 font-medium text-sm">{day.label}</span>
+              <span className="w-20 font-mono text-xs uppercase tracking-wide text-ink/70">{day.label}</span>
 
               {daySchedule.enabled ? (
                 <div className="flex items-center gap-2">
-                  <Input type="time" value={daySchedule.start_time} onChange={(e) => updateDay(day.value, {start_time: e.target.value})} className="w-32" />
-                  <span className="text-gray-400">—</span>
-                  <Input type="time" value={daySchedule.end_time} onChange={(e) => updateDay(day.value, {end_time: e.target.value})} className="w-32" />
+                  <Input type="time" value={daySchedule.start_time} onChange={(e) => updateDay(day.value, {start_time: e.target.value})} className="w-32 border-ink/20 rounded-sm font-mono text-sm" />
+                  <span className="text-ink/30">—</span>
+                  <Input type="time" value={daySchedule.end_time} onChange={(e) => updateDay(day.value, {end_time: e.target.value})} className="w-32 border-ink/20 rounded-sm font-mono text-sm" />
                 </div>
               ) : (
-                <span className="text-sm text-gray-400">Libur</span>
+                <span className="font-mono text-xs text-ink/30">Libur</span>
               )}
             </div>
           );
         })}
       </div>
 
-      <Button onClick={handleSave} disabled={saving}>
+      <Button onClick={handleSave} disabled={saving} className="bg-brass hover:bg-brass/90 text-ink rounded-sm">
         {saving ? 'Menyimpan...' : 'Simpan Jadwal'}
       </Button>
     </div>
