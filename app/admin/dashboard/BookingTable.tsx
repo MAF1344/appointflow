@@ -18,7 +18,7 @@ const statusStyles: Record<BookingStatus, string> = {
 
 export default function BookingTable({initialBookings}: {initialBookings: BookingWithRelations[]}) {
   const [bookings, setBookings] = useState(initialBookings);
-  const [filterStatus, setFilterStatus] = useState<string>('ALL');
+  const [filterStatus, setFilterStatus] = useState<string | null>('ALL');
   const [updatingId, setUpdatingId] = useState<string | null>(null);
 
   const filteredBookings = filterStatus === 'ALL' ? bookings : bookings.filter((b) => b.status === filterStatus);
@@ -88,8 +88,8 @@ export default function BookingTable({initialBookings}: {initialBookings: Bookin
                     <div className="font-medium text-ink">{booking.customer_name}</div>
                     <div className="text-xs text-ink/40">{booking.customer_email}</div>
                   </TableCell>
-                  <TableCell className="text-ink/80">{booking.services?.title ?? '-'}</TableCell>
-                  <TableCell className="text-ink/80">{booking.staff?.name ?? '-'}</TableCell>
+                  <TableCell className="text-ink/80">{booking.services?.[0]?.title ?? '-'}</TableCell>
+                  <TableCell className="text-ink/80">{booking.staff?.[0]?.name ?? '-'}</TableCell>
                   <TableCell className="font-mono text-sm text-ink/80">
                     {format(parseISO(booking.booking_date), 'd MMM yyyy', {
                       locale: localeId,

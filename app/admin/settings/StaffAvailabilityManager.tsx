@@ -24,7 +24,7 @@ type DaySchedule = {
 };
 
 export default function StaffAvailabilityManager({staffList, initialAvailability}: {staffList: Staff[]; initialAvailability: Availability[]}) {
-  const [selectedStaffId, setSelectedStaffId] = useState<string>(staffList[0]?.id ?? '');
+  const [selectedStaffId, setSelectedStaffId] = useState<string | null>(staffList[0]?.id ?? '');
   const [saving, setSaving] = useState(false);
 
   // Bangun jadwal awal per staff dari data availability yang ada

@@ -1,3 +1,13 @@
+export type Service = {
+  id: string;
+  title: string;
+  description: string | null;
+  duration_minutes: number;
+  price: number;
+  is_active: boolean;
+  created_at: string;
+};
+
 export type BookingStatus = 'PENDING' | 'APPROVED' | 'COMPLETED' | 'CANCELLED';
 
 export type BookingWithRelations = {
@@ -10,8 +20,8 @@ export type BookingWithRelations = {
   end_time: string;
   status: BookingStatus;
   notes: string | null;
-  services: {title: string} | null;
-  staff: {name: string} | null;
+  services: {title: string}[] | null;
+  staff: {name: string}[] | null;
 };
 
 export type Staff = {
