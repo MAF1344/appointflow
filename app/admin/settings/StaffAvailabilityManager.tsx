@@ -24,7 +24,12 @@ type DaySchedule = {
 };
 
 export default function StaffAvailabilityManager({staffList, initialAvailability}: {staffList: Staff[]; initialAvailability: Availability[]}) {
-  const [selectedStaffId, setSelectedStaffId] = useState<string | null>(staffList[0]?.id ?? '');
+  const [selectedStaffId, setSelectedStaffId] = useState<string>(staffList[0]?.id ?? '');
+
+  function handleStaffChange(value: string | null) {
+    if (value) setSelectedStaffId(value);
+  }
+
   const [saving, setSaving] = useState(false);
 
   // Bangun jadwal awal per staff dari data availability yang ada
@@ -97,7 +102,7 @@ export default function StaffAvailabilityManager({staffList, initialAvailability
     <div className="mt-6 space-y-6">
       <div>
         <label className="font-mono text-xs uppercase tracking-wide text-ink/50 mb-2 block">Pilih Staff</label>
-        <Select value={selectedStaffId} onValueChange={setSelectedStaffId}>
+        <Select value={selectedStaffId} onValueChange={handleStaffChange}>
           <SelectTrigger className="w-64 border-ink/20 rounded-sm bg-bone">
             <SelectValue>{(value: string) => staffList.find((s) => s.id === value)?.name ?? 'Pilih staff'}</SelectValue>
           </SelectTrigger>
